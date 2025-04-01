@@ -139,7 +139,7 @@ export default function App() {
                             <IconButton
                                 icon="minus"
                                 iconColor='white'
-                                onPress={() => item.setter(item.value - 1)}
+                                onPress={() => item.value - 1 >= 0 && item.setter(item.value - 1)}
                                 style={styles.iconButtonPlus}
                             />
                         </View>
