@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { Ionicons } from '@expo/vector-icons';
+import useReverse from '@/hooks/useReverse';
 
 export default function App() {
     const systemScheme = useColorScheme();
@@ -16,7 +17,7 @@ export default function App() {
     const [additionalInfo, setAdditionalInfo] = useState('');
     const [surveys, setSurveys] = useState<any[]>([]);
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
-
+    const { reverse, toggleReverse } = useReverse();
     // Actualiza el reloj cada segundo
     useEffect(() => {
         const timer = setInterval(() => setDateTime(new Date()), 60000);
@@ -131,15 +132,18 @@ export default function App() {
 
     // Componente para los contadores SI/NO/Interés
     const Counter = ({ label, value, setter }: { label: string; value: number; setter: (v: number) => void; }) => (
-        <View className="w-[48%] mb-4 bg-white rounded-2xl shadow-md overflow-hidden">
-            <View className="flex-row h-20">
+        <View className="w-[100%] mb-4 bg-white rounded-2xl shadow-md overflow-hidden">
+            <View className="flex-row h-15" style={{ flexDirection: reverse ? "row-reverse" : "row" }}>
                 <Pressable onPress={() => value > 0 && setter(value - 1)} className="flex-1 bg-[#FF3737] justify-center items-center">
                     <Ionicons name="remove" size={28} color="white" />
                 </Pressable>
-                <View className="w-16 bg-white justify-center items-center border-l border-r border-gray-300">
-                    <Text className="text-xl font-semibold text-center mt-2">{label}</Text>
-                    <Text className="text-2xl font-bold">{value}</Text>
-                </View>
+                <Pressable onLongPress={toggleReverse}>
+                    <View className="w-32 bg-white justify-center items-center border-l border-r border-gray-300" >
+                        <Text className="text-xl font-semibold text-center mt-2">{label}</Text>
+                        <Text className="text-2xl font-bold">{value}</Text>
+                    </View>
+                </Pressable>
+
                 <Pressable onPress={() => setter(value + 1)} className="flex-1 bg-[#34C759] justify-center items-center">
                     <Ionicons name="add" size={28} color="white" />
                 </Pressable>
@@ -163,7 +167,7 @@ export default function App() {
             onPress={onPress}
             className={`p-4 rounded-2xl mb-2 items-center shadow-md ${variant === 'primary'
                 ? disabled ? 'bg-zinc-400' : 'bg-[#34C759]'
-                : `border border-[#34C759]${disabled ? 'bg-zinc-400' : 'bg-white'}`
+                : `border border-[#34C759] bg-white`
                 }`}
             disabled={disabled}
         >
